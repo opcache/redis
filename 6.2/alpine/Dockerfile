@@ -91,12 +91,11 @@ RUN set -eux; \
 	redis-cli --version; \
 	redis-server --version
 
-RUN mkdir /data && chown redis:redis /data
-VOLUME /data
-WORKDIR /data
 
-COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
+RUN set -x ; \
+cp -R /usr/share/zoneinfo/Asia/Shanghai /etc/localtime ; \
+echo 'Asia/Shanghai' > /etc/timezone
 
+COPY  redis.conf  /opt/redis/redis.conf 
 EXPOSE 6379
-CMD ["redis-server"]
+CMD ["/usr/local/bin/redis-server","/opt/redis/redis.conf"]
